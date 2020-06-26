@@ -8,7 +8,7 @@ const adminRouter = express.Router();
 const info = [
   {
     username: 'asdfg',
-    password: 'qwerty'
+    password: 'qwerty',
   },
   {
     username: 'mno',
@@ -109,43 +109,47 @@ const daaQuestions = [
       [
         {
           input: "2 5 4 1 3 9 7 10 10 9 8 7 6 5 4 3 2 1",
-          output: "1 3 4 7 9 1 2 3 4 5 6 7 8 9 10"
+          output: "1 3 4 7 9 \n1 2 3 4 5 6 7 8 9 10 \n"
+        },
+        {
+          input: "1 0",
+          output: "\n"
         },
         {
           input: "1 6 1 2 3 4 5 6 ",
-          output: "1 2 3 4 5 6"
+          output: "1 2 3 4 5 6 \n"
         },
         {
           input: "2 1 4 9 7 7 7 7 7 7 7 7 7",
-          output: "4 7 7 7 7 7 7 7 7 7"
+          output: "4 \n7 7 7 7 7 7 7 7 7 \n"
         },
         {
           input: "1 6 10 30 20 400 500 0 ",
-          output: "0 10 20 30 400 500"
+          output: "0 10 20 30 400 500 \n"
         },
         {
           input: "1 4 3 4 2 1 ",
-          output: "1 2 3 4"
+          output: "1 2 3 4 \n"
         },
         {
           input: "1 4 1 4 2 3 ",
-          output: "1 2 3 4"
+          output: "1 2 3 4 \n"
         },
         {
           input: "1 4 3 1 2 4 ",
-          output: "1 2 3 4"
+          output: "1 2 3 4 \n"
         },
         {
           input: "1 4 3 4 1 2 ",
-          output: "1 2 3 4"
+          output: "1 2 3 4 \n"
         },
         {
           input: "1 4 1 2 4 3 ",
-          output: "1 2 3 4"
+          output: "1 2 3 4 \n"
         },
         {
           input: "1 4 3 4 2 0 ",
-          output: "0 2 3 4"
+          output: "0 2 3 4 \n"
         }
       ]
   },

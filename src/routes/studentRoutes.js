@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:studentRoutes');
+const passport = require('passport');
 
 const studentRouter = express.Router();
 
@@ -9,43 +10,31 @@ function router() {
     .get((req, res) => {
       res.render('studentLogin');
     })
-    .post((req, res) => {
-      const { username, password } = req.body;
-      const url = 'mongodb://localhost:27017';
-      const dbName = 'SmartLabApp';
-      (async function checkUser() {
-        let client;
-        try {
-          client = await MongoClient.connect(url);
-          debug('Connected correctly to server');
-          debug(username);
-          const db = client.db(dbName);
-          const col = db.collection('students');
-          const user = await col.findOne({ username });
-          debug(user);
-          if (user != null && user.password === password) {
-            res.redirect('/student/selectLab');
-          } else {
-            res.redirect('/student/login');
-          }
-        } catch (err) {
-          debug(err);
-        }
-        client.close();
-      }());
+    .post(passport.authenticate('local', {
+      successRedirect: '/student/selectLab',
+      failureRedirect: '/student/login'
+    }));
+  studentRouter.route('/logout')
+    .get((req, res) => {
+      req.logout();
+      res.redirect('/');
     });
   studentRouter.route('/selectLab')
+    .all((req, res, next) => {
+      if (req.user) {
+        next();
+      } else {
+        res.redirect('/student/login');
+      }
+    })
     .get((req, res) => {
-      res.render('studentSelectLab');
+      res.render(
+        'studentSelectLab',
+        {
+          username: req.user.username
+        }
+      );
     });
-  // studentRouter.route('/dsaLabTable')
-  //   .get((req, res) => {
-  //     res.render('dsaStudentLabTable');
-  //   });
-  // studentRouter.route('/daaLabTable')
-  //   .get((req, res) => {
-  //     res.render('daaStudentLabTable');
-  //   });
   return studentRouter;
 }
 

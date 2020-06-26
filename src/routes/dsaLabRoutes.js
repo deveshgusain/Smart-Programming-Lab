@@ -4,12 +4,17 @@ const dsaLabcontroller = require('../contollers/dsaLabController');
 const dsaLabRouter = express.Router();
 
 function router() {
-  const { getIndex, getById } = dsaLabcontroller();
+  const {
+    getIndex, getById, middleware, putById
+  } = dsaLabcontroller();
 
+  dsaLabRouter.use(middleware);
   dsaLabRouter.route('/')
     .get(getIndex);
+
   dsaLabRouter.route('/:id')
-    .get(getById);
+    .get(getById)
+    .post(putById);
   return dsaLabRouter;
 }
 

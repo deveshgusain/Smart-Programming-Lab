@@ -24,6 +24,7 @@ app.use(session({ secret: 'SmartLabApp' }));
 require('./src/config/passport')(app);
 
 app.use('/images', express.static(path.join(__dirname, 'assets/images')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));

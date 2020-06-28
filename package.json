@@ -19,6 +19,7 @@
   "homepage": "https://github.com/deveshgusain/Smart-Programming-Lab#readme",
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
+    "babel-polyfill": "^6.26.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.0",
     "chalk": "^4.1.0",
@@ -53,7 +54,7 @@
     "env": {
       "NODE_ENV": "development",
       "PORT": 3010,
-      "MONGODB_URI":"mongodb+srv://devesh_g:Devesh_Gusain@smartlabapp-knfmy.mongodb.net/<dbname>?retryWrites=true&w=majority"
+      "MONGODB_URI": "mongodb+srv://devesh_g:Devesh_Gusain@smartlabapp-knfmy.mongodb.net/<dbname>?retryWrites=true&w=majority"
     }
   }
 }

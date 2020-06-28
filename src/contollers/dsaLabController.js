@@ -6,13 +6,12 @@
 /* eslint-disable no-else-return */
 const { MongoClient, ObjectID } = require('mongodb');
 const debug = require('debug')('app:dsaLabController');
-
 const fs = require('fs');
-
 const multer = require('multer');
-const { cpp } = require('compile-run');
-
-// const check = require('../check/checkCode');
+const
+  {
+    c, cpp, python, java
+  } = require('compile-run');
 
 // mutter for save submiited file to disk storage. After executing it will be deleted
 let fileName;
@@ -108,13 +107,24 @@ function dsaLabController() {
           let score = 0;
           let des = 'Passed';
 
+          // function for different language
+          let fun;
+          if (req.body.lang === 'cpp') {
+            fun = cpp;
+          } else if (req.body.lang === 'c') {
+            fun = c;
+          } else if (req.body.lang === 'java') {
+            fun = java;
+          } else {
+            fun = python;
+          }
           //  Asynchronous function to compiling code agaist all test cases
           await (async function execute() {
             let i;
             let res;
             try {
               for (i = 0; i < question.testCases.length; i += 1) { // loop through all test cases
-                await cpp.runFile(`uploads/${fileName}`, { stdin: question.testCases[i].input }, (err, result) => { // compiling using compile-run npm package
+                await fun.runFile(`uploads/${fileName}`, { stdin: question.testCases[i].input }, (err, result) => { // compiling using compile-run npm package
                   if (err) {
                     debug(err);
                   } else {
@@ -139,7 +149,9 @@ function dsaLabController() {
 
           // Changing result from passed to partial passed if score is not full
           if (des === 'Passed') {
-            if (score !== question.testCases.length) {
+            if (score === 0) {
+              des = 'Wrong answer';
+            } else if (score !== question.testCases.length) {
               des = 'Partial Passed';
             }
           } else {
@@ -173,14 +185,14 @@ function dsaLabController() {
           const submission = {};
           submission.time = dateTime;
           submission.code = code;
-          submission.laguage = 'C++';
+          submission.laguage = req.body.lang;
           submission.score = score;
           submission.result = des;
           submission.questionId = req.body.questionId;
           submission.userId = req.user._id;
 
           // Add Submission to database
-          const result = await col1.insertOne(submission);
+          // const result = await col1.insertOne(submission);
           return res.render(
             'dsaQuestion',
             {

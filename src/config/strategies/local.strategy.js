@@ -8,7 +8,7 @@ module.exports = function localStrategy() {
     usernameField: 'username',
     passwordField: 'password'
   }, (username, password, done) => {
-    const url = 'mongodb://localhost:27017';
+    const url = process.env.MONGODB_URI;
     const dbName = 'SmartLabApp';
 
     (async function addUser() {

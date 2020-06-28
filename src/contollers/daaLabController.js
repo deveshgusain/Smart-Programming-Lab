@@ -93,7 +93,7 @@ function daaLabController() {
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
         debug(chalk.red('Failed to upload file'));
-        return res.redirect('/daaLab');
+        return res.redirect('/daaLab/5ef8e6f71d73c71ef34427a4');
       }
       const url = process.env.MONGODB_URI;
       const dbName = 'SmartLabApp';

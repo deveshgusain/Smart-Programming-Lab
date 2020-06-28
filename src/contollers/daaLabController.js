@@ -92,6 +92,7 @@ function daaLabController() {
       // eslint-disable-next-line consistent-return
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
+        debug(chalk.red('Failed to upload file'));
         return res.redirect('/daaLab');
       }
       const url = process.env.MONGODB_URI;

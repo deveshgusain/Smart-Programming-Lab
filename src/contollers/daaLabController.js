@@ -93,7 +93,8 @@ function daaLabController() {
       // eslint-disable-next-line consistent-return
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
-        return res.redirect('/daaLab');
+        debug(chalk.red('Failed to upload file'));
+        return res.redirect('/daaLab/5ef8e6f71d73c71ef34427a4');
       }
       const dbName = 'SmartLabApp';
 

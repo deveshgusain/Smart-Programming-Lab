@@ -94,7 +94,7 @@ function daaLabController() {
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
         debug(chalk.red('Failed to upload file'));
-        return res.redirect('/daaLab/5ef8e6f71d73c71ef34427a4');
+        return res.redirect('/daaLab');
       }
       const dbName = 'SmartLabApp';
 
@@ -113,8 +113,7 @@ function daaLabController() {
           // getting question from database
           const question = await col.findOne({ _id: new ObjectID(req.body.questionId) });
 
-          // Initialize score and description(result)
-          let score = 0;
+          // Initialize  description(result)
           let des = 'Passed';
           let code;
 
@@ -129,63 +128,86 @@ function daaLabController() {
           const config = {};
           config.time_limit = 1;
           config.memory_limit = 323244;
-          config.source = code;
           config.language = req.body.lang;
+
+          // Combine All Inputs ans Output of all testcases
+          let input = '';
+          let output = '';
+          let ans;
+          for (let i = 0; i < question.testCases.length; i += 1) {
+            input += question.testCases[i].input;
+            output += question.testCases[i].output;
+          }
+
+          // Modify Input
+          input = `${question.testCases.length}\n${input}`;
+
+          // Modify Name of MAIN in user code
+          const functionName = `main_${Date.now()}`;
+          const codeCpy = code.replace('main', functionName);
+
+          // Give correct Extension to Wrappper Program
+          let ex;
+          if (req.body.lang === 'C++') {
+            ex = 'cpp';
+          } else if (req.body.lang === 'C') {
+            ex = 'c';
+          } else {
+            ex = 'py';
+          }
+
+          // Fetch Language Specific Wrappper Program
+          let wrapper;
+          try {
+            wrapper = fs.readFileSync(`uploads/${req.body.lang}.${ex}`, 'utf8');
+          } catch (e) {
+            debug('Error:', e.stack);
+          }
+
+          // Modify Name of UserMain in wrapper code
+          wrapper = wrapper.replace('UserMain', functionName);
+
+          // Add code in front of Wrapper program
+          wrapper = `${codeCpy}\n${wrapper}`;
 
           // loop through all test cases
           await (async function execute() {
-            let i;
             try {
-              for (i = 0; i < question.testCases.length; i += 1) {
-                config.input = question.testCases[i].input;
-                let res = await hackerearth.run(config, (err, response) => {
-                  if (err) {
-                    debug(err);
-                  } else {
-                    return response;
-                  }
-                });
-
-                // change res to JSON
-                res = JSON.parse(res);
-                // debug(res.run_status.status);
-                debug(res.run_status.status);
-                if (res.run_status.status === 'AC') { // if compile successfully
-                  const ans = res.run_status.output;
-
-                  // if answer is right then add 1 to score
-                  if (ans === question.testCases[i].output) {
-                    score += 1;
-                  }
-                } else if (res.run_status.status === 'RE') { // if run time error
-                  des = 'Run-time Error';
-                  break;
-                } else if (res.run_status.status === 'CE') { // if compiled unsuccessfully
-                  des = 'Compile-time Error';
-                  break;
+              config.source = wrapper;
+              config.input = input;
+              let res = await hackerearth.run(config, (err, response) => {
+                if (err) {
+                  debug(err);
                 } else {
-                  debug(res);
-                  break;
+                  return response;
                 }
+              });
+
+              // change res to JSON
+              res = JSON.parse(res);
+              debug(res.run_status.status);
+
+              if (res.run_status.status === 'AC') { // if compile successfully
+                ans = res.run_status.output;
+                ans = ans.replace(/\n/g, ' ');
+                output = output.replace(/\n/g, ' ');
+                ans = ans.replace(/ /g, '');
+                output = output.replace(/ /g, '');
+                if (ans !== output) {
+                  des = 'Wrong Answer';
+                }
+              } else if (res.run_status.status === 'RE') { // if run time error
+                des = 'Run-time Error';
+              } else if (res.run_status.status === 'CE') { // if compiled unsuccessfully
+                des = 'Compile-time Error';
+              } else {
+                debug(res);
               }
             } catch (err) {
               debug(err);
             }
           }());
-
-          // Changing result from passed to partial passed if score is not full
-          if (des === 'Passed') {
-            if (score === 0) {
-              des = 'Wrong answer';
-            } else if (score !== question.testCases.length) {
-              des = 'Partial Passed';
-            }
-          } else {
-            score = 0;
-          }
-
-          // Making score a to (a / b) for display in ejs
-          score = `${score} / ${question.testCases.length}`;
+          debug(des);
 
           // Making a string equal to current date and time as date_time
           const today = new Date();
@@ -205,7 +227,6 @@ function daaLabController() {
           submission.time = dateTime;
           submission.code = code;
           submission.laguage = req.body.lang;
-          submission.score = score;
           submission.result = des;
           submission.questionId = req.body.questionId;
           submission.userId = req.user._id;
@@ -218,7 +239,7 @@ function daaLabController() {
             {
               question,
               username: req.user.username,
-              score: submission.score, // sending score and result to html
+              // sending result to html
               result: submission.result
             }
           );

@@ -110,47 +110,47 @@ const daaQuestions = [
     testCases:
       [
         {
-          input: "2\n5\n4\n1\n3\n9\n7\n10\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1",
+          input: "2\n5\n4\n1\n3\n9\n7\n10\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1\n",
           output: "1 3 4 7 9 \n1 2 3 4 5 6 7 8 9 10 \n"
         },
         {
-          input: "1\n0",
+          input: "1\n0\n",
           output: "\n"
         },
         {
-          input: "1\n6\n1\n2\n3\n4\n5\n6 ",
+          input: "1\n6\n1\n2\n3\n4\n5\n6\n",
           output: "1 2 3 4 5 6 \n"
         },
         {
-          input: "2\n1\n4\n9\n7\n7\n7\n7\n7\n7\n7\n7\n7",
+          input: "2\n1\n4\n9\n7\n7\n7\n7\n7\n7\n7\n7\n7\n",
           output: "4 \n7 7 7 7 7 7 7 7 7 \n"
         },
         {
-          input: "1\n6\n10\n30\n20\n400\n500\n0 ",
+          input: "1\n6\n10\n30\n20\n400\n500\n0\n",
           output: "0 10 20 30 400 500 \n"
         },
         {
-          input: "1\n4\n3\n4\n2\n1",
+          input: "1\n4\n3\n4\n2\n1\n",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1\n4\n1\n4\n2\n3",
+          input: "1\n4\n1\n4\n2\n3\n",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1\n4\n3\n1\n2\n4 ",
+          input: "1\n4\n3\n1\n2\n4\n",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1\n4\n3\n4\n1\n2 ",
+          input: "1\n4\n3\n4\n1\n2\n",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1\n4\n1\n2\n4\n3 ",
+          input: "1\n4\n1\n2\n4\n3\n",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1\n4\n3\n4\n2\n0 ",
+          input: "1\n4\n3\n4\n2\n0\n",
           output: "0 2 3 4 \n"
         }
       ]

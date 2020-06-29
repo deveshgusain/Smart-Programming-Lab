@@ -36,7 +36,6 @@ const storage = multer.diskStorage({
 
 function daaLabController() {
   function getIndex(req, res) {
-    
     const dbName = 'SmartLabApp';
 
     (async function mongo() {
@@ -96,7 +95,6 @@ function daaLabController() {
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
         return res.redirect('/daaLab');
       }
-
       const dbName = 'SmartLabApp';
 
       // Asynchronous function to getting question information of the submission and

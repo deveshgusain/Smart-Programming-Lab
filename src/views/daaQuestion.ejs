@@ -142,7 +142,15 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
         <form action="/daaLab/<%=question._id%>" method="POST" enctype="multipart/form-data">
         <div class="mbr-row mbr-jc-c">
             <div class="mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-8">
-                <h2 class="mbr-section-title align-right mbr-fonts-style mbr-bold display-2">Upload your code</h2>
+                <h2 class="mbr-section-title align-right mbr-fonts-style mbr-bold display-2">
+                    Upload your code
+                </h2>
+                    <select  name="lang" >
+                        <option value="C++">C++</option>
+                        <option  value="C">C</option>
+                        <!-- <option  value="java">Java</option> -->
+                        <option value="Py">Python</option>
+                      </select>
                 <h3 class="mbr-section-subtitle align-right mbr-fonts-style mbr-light mbr-py-1 display-7">
                     <!-- <label for="lang">Choose a language:</label> -->
                 <select name="lang" id="cars">

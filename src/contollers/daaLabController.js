@@ -3,7 +3,6 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-await-in-loop */
-
 /* eslint-disable no-shadow */
 /* eslint-disable no-else-return */
 
@@ -89,8 +88,8 @@ function daaLabController() {
   function putById(req, res) {
     const upload = multer({ storage }).single('myfile');
 
+    // eslint-disable-next-line consistent-return
     upload(req, res, (err) => {
-      // eslint-disable-next-line consistent-return
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
         debug(chalk.red('Failed to upload file'));

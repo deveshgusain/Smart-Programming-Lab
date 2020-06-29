@@ -6,7 +6,6 @@ const bodyParsre = require('body-parser');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const mongoose = require('mongoose');
 
 const app = express();
 const port = process.env.PORT || 3000;

@@ -1,17 +1,26 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-await-in-loop */
+
 /* eslint-disable no-shadow */
 /* eslint-disable no-else-return */
+
 const { MongoClient, ObjectID } = require('mongodb');
 const debug = require('debug')('app:daaLabController');
 const fs = require('fs');
-
 const multer = require('multer');
-const { cpp } = require('compile-run');
+const hackerEarth = require('hackerearth-node');
+const chalk = require('chalk');
 
-// const check = require('../check/checkCode');
+// eslint-disable-next-line new-cap
+const hackerearth = new hackerEarth(
+  'a21190f58028e670fba2578dfe0659d1db012f51', // Your Client Secret Key here this is mandatory
+  '0'// mode sync=1 or async(optional)=0 or null async is by default and preferred for nodeJS
+);
+
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 
 // mutter for save submiited file to disk storage. After executing it will be deleted
 let fileName;
@@ -27,7 +36,7 @@ const storage = multer.diskStorage({
 
 function daaLabController() {
   function getIndex(req, res) {
-    const url = 'mongodb://localhost:27017';
+    
     const dbName = 'SmartLabApp';
 
     (async function mongo() {
@@ -53,8 +62,7 @@ function daaLabController() {
     }());
   }
   function getById(req, res) {
-    const { id } = req.params;
-    const url = 'mongodb://localhost:27017';
+    const { id } = req.params
     const dbName = 'SmartLabApp';
 
     (async function mongo() {
@@ -82,14 +90,13 @@ function daaLabController() {
   function putById(req, res) {
     const upload = multer({ storage }).single('myfile');
 
-    // eslint-disable-next-line consistent-return
     upload(req, res, (err) => {
+      // eslint-disable-next-line consistent-return
       // if file is empty or other error
       if (req.fileValidationError || !req.file || err instanceof multer.MulterError || err) {
         return res.redirect('/daaLab');
       }
 
-      const url = 'mongodb://localhost:27017';
       const dbName = 'SmartLabApp';
 
       // Asynchronous function to getting question information of the submission and
@@ -103,31 +110,63 @@ function daaLabController() {
           const db = client.db(dbName);
           const col = db.collection('daaQuestions'); // for fetching question
           const col1 = db.collection('submissions'); // for updating submission later
-          const question = await col.findOne({ _id: new ObjectID(req.body.questionId) }); // getting question
+
+          // getting question from database
+          const question = await col.findOne({ _id: new ObjectID(req.body.questionId) });
+
+          // Initialize score and description(result)
           let score = 0;
           let des = 'Passed';
+          let code;
 
-          //  Asynchronous function to compiling code agaist all test cases
+          // fetching code from file
+          try {
+            code = fs.readFileSync(`uploads/${fileName}`, 'utf8');
+          } catch (e) {
+            debug('Error:', e.stack);
+          }
+
+          // Making config to pass in heackerearth API
+          const config = {};
+          config.time_limit = 1;
+          config.memory_limit = 323244;
+          config.source = code;
+          config.language = req.body.lang;
+
+          // loop through all test cases
           await (async function execute() {
             let i;
-            let res;
             try {
-              for (i = 0; i < question.testCases.length; i += 1) { // loop through all test cases
-                await cpp.runFile(`uploads/${fileName}`, { stdin: question.testCases[i].input }, (err, result) => { // compiling using compile-run npm package
+              for (i = 0; i < question.testCases.length; i += 1) {
+                config.input = question.testCases[i].input;
+                let res = await hackerearth.run(config, (err, response) => {
                   if (err) {
                     debug(err);
                   } else {
-                    res = result;
-                    debug(result);
+                    return response;
                   }
                 });
-                if (res.exitCode === 0) { // if compiler successfully
-                  const ans = res.stdout;
-                  if (ans === question.testCases[i].output) { // if answer is right then add 1 to score
+
+                // change res to JSON
+                res = JSON.parse(res);
+                // debug(res.run_status.status);
+                debug(res);
+                if (res.run_status.status === 'AC') { // if compile successfully
+                  let ans = res.run_status.output;
+
+                  // if answer is right then add 1 to score
+                  debug(ans);
+                  if (ans === question.testCases[i].output) {
                     score += 1;
                   }
-                } else { // if compiled unsuccecfully or run time error
-                  des = `${res.errorType} error`;
+                } else if (res.run_status.status === 'RE') { // if run time error
+                  des = 'Run-time Error';
+                  break;
+                } else if (res.run_status.status === 'CE') { // if compiled unsuccessfully
+                  des = 'Compile-time Error';
+                  break;
+                } else {
+                  debug(res);
                   break;
                 }
               }
@@ -138,12 +177,15 @@ function daaLabController() {
 
           // Changing result from passed to partial passed if score is not full
           if (des === 'Passed') {
-            if (score !== question.testCases.length) {
+            if (score === 0) {
+              des = 'Wrong answer';
+            } else if (score !== question.testCases.length) {
               des = 'Partial Passed';
             }
           } else {
             score = 0;
           }
+
           // Making score a to (a / b) for display in ejs
           score = `${score} / ${question.testCases.length}`;
 
@@ -152,14 +194,6 @@ function daaLabController() {
           const date = `${today.getFullYear()}-${(today.getMonth() + 1)}-${today.getDate()}`;
           const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
           const dateTime = `${date} ${time}`;
-
-          // fetching code from file
-          let code;
-          try {
-            code = fs.readFileSync(`uploads/${fileName}`, 'utf8');
-          } catch (e) {
-            debug('Error:', e.stack);
-          }
 
           // delete file
           fs.unlink(`uploads/${fileName}`, (err) => {
@@ -172,11 +206,12 @@ function daaLabController() {
           const submission = {};
           submission.time = dateTime;
           submission.code = code;
-          submission.laguage = 'C++';
+          submission.laguage = req.body.lang;
           submission.score = score;
           submission.result = des;
           submission.questionId = req.body.questionId;
           submission.userId = req.user._id;
+          debug(submission);
 
           // Add Submission to database
           const result = await col1.insertOne(submission);

@@ -3,6 +3,8 @@ const express = require('express');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:adminRoutes');
 
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+
 const adminRouter = express.Router();
 
 const info = [
@@ -108,47 +110,47 @@ const daaQuestions = [
     testCases:
       [
         {
-          input: "2 5 4 1 3 9 7 10 10 9 8 7 6 5 4 3 2 1",
+          input: "2\n5\n4\n1\n3\n9\n7\n10\n10\n9\n8\n7\n6\n5\n4\n3\n2\n1",
           output: "1 3 4 7 9 \n1 2 3 4 5 6 7 8 9 10 \n"
         },
         {
-          input: "1 0",
+          input: "1\n0",
           output: "\n"
         },
         {
-          input: "1 6 1 2 3 4 5 6 ",
+          input: "1\n6\n1\n2\n3\n4\n5\n6 ",
           output: "1 2 3 4 5 6 \n"
         },
         {
-          input: "2 1 4 9 7 7 7 7 7 7 7 7 7",
+          input: "2\n1\n4\n9\n7\n7\n7\n7\n7\n7\n7\n7\n7",
           output: "4 \n7 7 7 7 7 7 7 7 7 \n"
         },
         {
-          input: "1 6 10 30 20 400 500 0 ",
+          input: "1\n6\n10\n30\n20\n400\n500\n0 ",
           output: "0 10 20 30 400 500 \n"
         },
         {
-          input: "1 4 3 4 2 1 ",
+          input: "1\n4\n3\n4\n2\n1",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1 4 1 4 2 3 ",
+          input: "1\n4\n1\n4\n2\n3",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1 4 3 1 2 4 ",
+          input: "1\n4\n3\n1\n2\n4 ",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1 4 3 4 1 2 ",
+          input: "1\n4\n3\n4\n1\n2 ",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1 4 1 2 4 3 ",
+          input: "1\n4\n1\n2\n4\n3 ",
           output: "1 2 3 4 \n"
         },
         {
-          input: "1 4 3 4 2 0 ",
+          input: "1\n4\n3\n4\n2\n0 ",
           output: "0 2 3 4 \n"
         }
       ]
@@ -205,13 +207,12 @@ const daaQuestions = [
 function router() {
   adminRouter.route('/addStudent')
     .get((req, res) => {
-      const url = 'mongodb://localhost:27017';
       const dbName = 'SmartLabApp';
 
       (async function mongo() {
         let client;
         try {
-          client = await MongoClient.connect(url);
+          client = await MongoClient.connect(url, { useNewUrlParser: true });
           debug('Connected correctly  to server');
 
           const db = client.db(dbName);
@@ -225,13 +226,12 @@ function router() {
     });
   adminRouter.route('/addDsaQuestion')
     .get((req, res) => {
-      const url = 'mongodb://localhost:27017';
       const dbName = 'SmartLabApp';
 
       (async function mongo() {
         let client;
         try {
-          client = await MongoClient.connect(url);
+          client = await MongoClient.connect(url, { useNewUrlParser: true });
           debug('Connected correctly  to server');
 
           const db = client.db(dbName);
@@ -245,7 +245,6 @@ function router() {
     });
   adminRouter.route('/addDaaQuestion')
     .get((req, res) => {
-      const url = 'mongodb://localhost:27017';
       const dbName = 'SmartLabApp';
 
       (async function mongo() {

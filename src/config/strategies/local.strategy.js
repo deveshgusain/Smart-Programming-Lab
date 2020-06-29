@@ -3,12 +3,13 @@ const { Strategy } = require('passport-local');
 const { MongoClient } = require('mongodb');
 const debug = require('debug')('app:local.strategy');
 
+const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
+
 module.exports = function localStrategy() {
   passport.use(new Strategy({
     usernameField: 'username',
     passwordField: 'password'
   }, (username, password, done) => {
-    const url = 'mongodb://localhost:27017';
     const dbName = 'SmartLabApp';
 
     (async function addUser() {

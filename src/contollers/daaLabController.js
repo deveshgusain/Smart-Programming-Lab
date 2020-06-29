@@ -61,7 +61,7 @@ function daaLabController() {
     }());
   }
   function getById(req, res) {
-    const { id } = req.params
+    const { id } = req.params;
     const dbName = 'SmartLabApp';
 
     (async function mongo() {
@@ -149,12 +149,11 @@ function daaLabController() {
                 // change res to JSON
                 res = JSON.parse(res);
                 // debug(res.run_status.status);
-                debug(res);
+                debug(res.run_status.status);
                 if (res.run_status.status === 'AC') { // if compile successfully
-                  let ans = res.run_status.output;
+                  const ans = res.run_status.output;
 
                   // if answer is right then add 1 to score
-                  debug(ans);
                   if (ans === question.testCases[i].output) {
                     score += 1;
                   }

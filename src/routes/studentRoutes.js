@@ -1,6 +1,4 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
-const debug = require('debug')('app:studentRoutes');
 const passport = require('passport');
 
 const studentRouter = express.Router();

@@ -3,7 +3,6 @@ const debug = require('debug')('app');
 const morgan = require('morgan');
 const path = require('path');
 const bodyParsre = require('body-parser');
-const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
@@ -34,11 +33,13 @@ const studentRouter = require('./src/routes/studentRoutes')();
 const adminRouter = require('./src/routes/adminRoutes')();
 const dsaLabRouter = require('./src/routes/dsaLabRoutes')();
 const daaLabRouter = require('./src/routes/daaLabRoutes')();
+const submissionRouter = require('./src/routes/submissionRoutes')();
 
 app.use('/student', studentRouter);
 app.use('/admin', adminRouter);
 app.use('/dsaLab', dsaLabRouter);
 app.use('/daaLab', daaLabRouter);
+app.use('/submissions', submissionRouter);
 
 app.get('/', (req, res) => {
   res.render('index');

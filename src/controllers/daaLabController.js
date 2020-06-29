@@ -77,7 +77,7 @@ function daaLabController() {
             question,
             username: req.user.username,
             result: null,
-            score: null
+            scroll: null
           }
         );
       } catch (err) {
@@ -123,6 +123,13 @@ function daaLabController() {
             debug('Error:', e.stack);
           }
 
+          // delete file
+          fs.unlink(`uploads/${fileName}`, (err) => {
+            if (err) throw err;
+            // if no error, file has been deleted successfully
+            debug('File deleted!');
+          });
+
           // Making config to pass in heackerearth API
           const config = {};
           config.time_limit = 1;
@@ -151,8 +158,6 @@ function daaLabController() {
             ex = 'cpp';
           } else if (req.body.lang === 'C') {
             ex = 'c';
-          } else {
-            ex = 'py';
           }
 
           // Fetch Language Specific Wrappper Program
@@ -214,18 +219,13 @@ function daaLabController() {
           const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
           const dateTime = `${date} ${time}`;
 
-          // delete file
-          fs.unlink(`uploads/${fileName}`, (err) => {
-            if (err) throw err;
-            // if no error, file has been deleted successfully
-            debug('File deleted!');
-          });
-
           // Making Submission ready to push in database
           const submission = {};
+          submission.questionNo = question.questionNo;
           submission.time = dateTime;
           submission.code = code;
-          submission.laguage = req.body.lang;
+          submission.lab = 'DAA';
+          submission.language = req.body.lang;
           submission.result = des;
           submission.questionId = req.body.questionId;
           submission.userId = req.user._id;
@@ -239,7 +239,8 @@ function daaLabController() {
               question,
               username: req.user.username,
               // sending result to html
-              result: submission.result
+              result: submission.result,
+              scroll: true
             }
           );
         } catch (err) {

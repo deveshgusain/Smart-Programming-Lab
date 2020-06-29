@@ -142,7 +142,8 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
 					<th>Held Date</th>
 					<th>Attendance</th>
 					<th>Marks</th> 
-					<th>Attempt link</th>
+          <th>Attempt link</th>
+          <th>Past Submissions</th>
 					</tr>
 					<%for(let i=0;i<questions.length;i++){%>
 				  <tr>
@@ -151,7 +152,8 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
 					<td></td>
 					<td></td>
 					<td></td>
-					<td><a href = "/daaLab/<%=questions[i]._id%>">Link</a></td>
+          <td><a href = "/daaLab/<%=questions[i]._id%>">Link</a></td>
+          <td><a href = "/submissions/<%=username%>">Link</a></td>
 					</tr>
 					<%}%>
 			</table>

@@ -1,5 +1,5 @@
 const express = require('express');
-const daaLabcontroller = require('../contollers/daaLabController');
+const daaLabcontroller = require('../controllers/daaLabController');
 
 const daaLabRouter = express.Router();
 

@@ -146,7 +146,6 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
                     <select  name="lang" >
                         <option value="C++">C++</option>
                         <option  value="C">C</option>
-                        <option value="Py">Python</option>
                     </select>
                 <h3 class="mbr-section-subtitle align-right mbr-fonts-style mbr-light mbr-py-1 display-7">
                     <input type="file" id="myfile" name="myfile">
@@ -169,11 +168,10 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
     <div class="container">
         <div class="mbr-row mbr-jc-c">
             <div class="mbr-col-sm-12 mbr-col-md-10 mbr-col-lg-8">
-                <p class="mbr-text mbr-fonts-style mbr-py-1 display-7">
-                    
+                <p class="mbr-text mbr-fonts-style mbr-py-1 display-7" id="result">
                     <%if(result) {%>
                         <strong>
-                        <%=result%>
+                            <%=result%>
                         </strong>
                     <%}%>
                 </p>
@@ -218,7 +216,12 @@ body{font-family: Roboto;}blockquote{border-color: #4ea2e3;}div[submit-success] 
 </section>
 
 
-  
+<%if(scroll){%>
+    <script>
+        var element = document.getElementById("result");
+        element.scrollIntoView();
+    </script>
+<%}%>
   
 </body>
 </html>

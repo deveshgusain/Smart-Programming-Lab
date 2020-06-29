@@ -1,5 +1,5 @@
 const express = require('express');
-const dsaLabcontroller = require('../contollers/dsaLabController');
+const dsaLabcontroller = require('../controllers/dsaLabController');
 
 const dsaLabRouter = express.Router();
 

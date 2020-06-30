@@ -170,6 +170,7 @@ function dsaLabController() {
 
           // Modify Name of UserMain in wrapper code
           wrapper = wrapper.replace('UserMain', functionName);
+          wrapper = wrapper.replace('timeLimit', question.timeLimit);
 
           // Add code in front of Wrapper program
           wrapper = `${codeCpy}\n${wrapper}`;
@@ -192,18 +193,24 @@ function dsaLabController() {
               debug(res.run_status.status);
 
               if (res.run_status.status === 'AC') { // if compile successfully
-                ans = res.run_status.output;
-                ans = ans.replace(/\n/g, ' ');
-                output = output.replace(/\n/g, ' ');
-                ans = ans.replace(/ /g, '');
-                output = output.replace(/ /g, '');
-                if (ans !== output) {
-                  des = 'Wrong Answer';
+                if (res.run_status.exit_code === 0) {
+                  des = 'Time Limt Excceded';
+                } else {
+                  ans = res.run_status.output;
+                  ans = ans.replace(/\n/g, ' ');
+                  output = output.replace(/\n/g, ' ');
+                  ans = ans.replace(/ /g, '');
+                  output = output.replace(/ /g, '');
+                  if (ans !== output) {
+                    des = 'Wrong Answer';
+                  }
                 }
               } else if (res.run_status.status === 'RE') { // if run time error
                 des = 'Run-time Error';
               } else if (res.run_status.status === 'CE') { // if compiled unsuccessfully
                 des = 'Compile-time Error';
+              } else if (res.run_status.status === 'TLE') {
+                des = 'Time Limt Excceded';
               } else {
                 debug(res);
               }

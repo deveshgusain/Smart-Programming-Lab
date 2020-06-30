@@ -1,19 +1,27 @@
+/* eslint-disable no-underscore-dangle */
 const { MongoClient, ObjectID } = require('mongodb');
 const debug = require('debug')('app:submissionController');
 
 const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 
 function submissionController() {
-  function allSub(req, res) {
+  function showSub(req, res) {
     const dbName = 'SmartLabApp';
     (async function mongo() {
+      const questionId = req.query.question;
+      debug(questionId);
       let client;
       try {
         client = await MongoClient.connect(url);
         const db = client.db(dbName);
         const col = await db.collection('submissions');
-        // eslint-disable-next-line no-underscore-dangle
-        const submissions = await col.find({ userId: req.user._id }).toArray();
+        let submissions;
+        if (questionId) {
+          submissions = await col.find({ userId: req.user._id, questionId }).toArray();
+        } else {
+          submissions = await col.find({ userId: req.user._id }).toArray();
+        }
+
         res.render(
           'showSubmissions',
           {
@@ -61,7 +69,7 @@ function submissionController() {
       res.redirect('/student/login');
     }
   }
-  return { allSub, middleware, code };
+  return { showSub, middleware, code };
 }
 
 module.exports = submissionController;

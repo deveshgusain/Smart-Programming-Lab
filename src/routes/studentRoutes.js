@@ -33,6 +33,15 @@ function router() {
         }
       );
     });
+  studentRouter.route('/profile/:username')
+    .get((req, res) => {
+      res.render(
+        'studentProfile',
+        {
+          username: req.user.username
+        }
+      );
+    });
   return studentRouter;
 }
 

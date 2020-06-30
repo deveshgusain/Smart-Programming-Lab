@@ -5,13 +5,13 @@ const submissionRouter = express.Router();
 
 function router() {
   const {
-    allSub, middleware, code
+    showSub, middleware, code
   } = submissionController();
 
   submissionRouter.use(middleware);
 
   submissionRouter.route('/:user')
-    .get(allSub);
+    .get(showSub);
   submissionRouter.route('/code/:id')
     .get(code);
   return submissionRouter;

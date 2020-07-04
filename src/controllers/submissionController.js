@@ -9,7 +9,6 @@ function submissionController() {
     const dbName = 'SmartLabApp';
     (async function mongo() {
       const questionId = req.query.question;
-      debug(questionId);
       let client;
       try {
         client = await MongoClient.connect(url);
@@ -46,7 +45,6 @@ function submissionController() {
         // eslint-disable-next-line no-underscore-dangle
         const submission = await col.findOne({ _id: new ObjectID(id) });
         const prog = submission.code.toString();
-        debug(typeof (prog));
         debug(prog);
         res.render(
           'showCode',

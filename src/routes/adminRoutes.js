@@ -7,19 +7,42 @@ const url = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 
 const adminRouter = express.Router();
 
-const info = [
+const users = [
   {
-    username: 'asdfg',
-    password: 'qwerty',
+    username: '1705135',
+    password: 'password',
+    role: 'student'
+  },
+  {
+    username: '1705183',
+    password: 'password',
+    role: 'student'
+  },
+  {
+    username: '1705807',
+    password: 'password',
+    role: 'student'
   },
   {
     username: 'mno',
-    password: 'xyz'
+    password: 'xyz',
+    role: 'student'
+  },
+  {
+    username: 'faculty',
+    password: 'password',
+    role: 'faculty'
+  },
+  {
+    username: 'asd',
+    password: 'qwe',
+    role: 'faculty'
   }];
 
 const dsaQuestions = [
   {
     questionNo: 1,
+    lab: 1,
     expectedDate: "4 May 2020",
     topic: "Operating an array",
     timeLimit: 2,
@@ -44,6 +67,7 @@ const dsaQuestions = [
   },
   {
     questionNo: 2,
+    lab: 2,
     expectedDate: "11 May 2020",
     topic: "Find duplicates in an array",
     timeLimit: 2,
@@ -68,6 +92,7 @@ const dsaQuestions = [
   },
   {
     questionNo: 3,
+    lab: 3,
     expectedDate: "18 May 2020",
     topic: "Operating an array",
     timeLimit: 2,
@@ -93,6 +118,7 @@ const dsaQuestions = [
 const daaQuestions = [
   {
     questionNo: 1,
+    lab: 1,
     expectedDate: "10 July 2020",
     topic: "Bubble sort",
     timeLimit: 2,
@@ -157,6 +183,7 @@ const daaQuestions = [
   },
   {
     questionNo: 2,
+    lab: 2,
     expectedDate: "18 July 2020",
     topic: "Minimum swaps",
     timeLimit: 2,
@@ -181,6 +208,7 @@ const daaQuestions = [
   },
   {
     questionNo: 3,
+    lab: 3,
     expectedDate: "25 July 2020",
     topic: "Minimum swaps",
     timeLimit: 2,
@@ -205,7 +233,7 @@ const daaQuestions = [
   }];
 
 function router() {
-  adminRouter.route('/addStudent')
+  adminRouter.route('/addUser')
     .get((req, res) => {
       const dbName = 'SmartLabApp';
 
@@ -216,7 +244,7 @@ function router() {
           debug('Connected correctly  to server');
 
           const db = client.db(dbName);
-          const response = await db.collection('students').insertMany(info);
+          const response = await db.collection('users').insertMany(users);
           res.json(response);
         } catch (err) {
           debug(err);

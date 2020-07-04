@@ -9,10 +9,6 @@ const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// const Submission = require('./src/models/submissionModel');
-// const dsaQuestion = require('./src/models/questionModel');
-// const daaQuestion = require('./src/models/questionModel');
-
 app.use(morgan('tiny'));
 app.use(bodyParsre.json());
 app.use(bodyParsre.urlencoded({ extended: false }));
@@ -34,8 +30,10 @@ const adminRouter = require('./src/routes/adminRoutes')();
 const dsaLabRouter = require('./src/routes/dsaLabRoutes')();
 const daaLabRouter = require('./src/routes/daaLabRoutes')();
 const submissionRouter = require('./src/routes/submissionRoutes')();
+const facultyRouter = require('./src/routes/facultyRoutes')();
 
 app.use('/student', studentRouter);
+app.use('/faculty', facultyRouter);
 app.use('/admin', adminRouter);
 app.use('/dsaLab', dsaLabRouter);
 app.use('/daaLab', daaLabRouter);

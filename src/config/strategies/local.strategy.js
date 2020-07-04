@@ -19,7 +19,7 @@ module.exports = function localStrategy() {
         debug('Connected correctly to server');
 
         const db = client.db(dbName);
-        const col = db.collection('students');
+        const col = db.collection('users');
         const user = await col.findOne({ username });
 
         if (user && user.password === password) {
